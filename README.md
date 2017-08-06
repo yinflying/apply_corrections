@@ -3,8 +3,19 @@
 A weechat plugin to **send a user's messages with corrections** applied when
 they send a correction string (ex: s/typo/replacement).
 
+# INSTALL
+put the apply_corrections.py to `~/.weechat/python/autoload` and then restart
+the weechat.
 
-## options
+# USAGE
+when you have send a wrong message to the channer,you could type 's/typo/replacement'
+to correct your message
+```
+│11:11 yinflying | this is a appply_corrections                                                                                        
+│11:11 yinflying | s/appply/apply       <- Here is you have type                                                                             
+│11:11 yinflying | this is a apply_corrections[repalce]  <- Here is corrected msg
+```
+# OPTIONS 
 
 ### check_every
 
@@ -23,7 +34,7 @@ until they expire.
 
 ### print_format
 
-Format string for the printed corrections (Default: "[nick]: [corrected]").
+Format string for the printed corrections (Default: "[corrected][tag]").
 Variables allowed:
 
 * **[nick]**: The nick of the person who sent the messages.
@@ -33,7 +44,7 @@ Variables allowed:
 * **[pattern]**: The "typo" portion of the correction.
 * **[replacement]**: The "replacement" portion of the correction.
 * **[timestamp]**: The timestamp of the original message.
-* **[tag]**: customized tag string message.
+* **[tag]**: customized tag string message,defaut:[replace]
 
 ### print_limit
 
