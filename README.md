@@ -1,7 +1,8 @@
 # apply_corrections
 
-A weechat plugin to re-print a user's messages with corrections applied when
+A weechat plugin to **send a user's messages with corrections** applied when
 they send a correction string (ex: s/typo/replacement).
+
 
 ## options
 
@@ -32,6 +33,7 @@ Variables allowed:
 * **[pattern]**: The "typo" portion of the correction.
 * **[replacement]**: The "replacement" portion of the correction.
 * **[timestamp]**: The timestamp of the original message.
+* **[tag]**: customized tag string message.
 
 ### print_limit
 
