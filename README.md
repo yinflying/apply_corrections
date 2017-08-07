@@ -11,11 +11,11 @@ the weechat.
 when you have send a wrong message to the channer,you could type 's/typo/replacement'
 to correct your message
 ```
-│11:11 yinflying | this is a appply_corrections                                                                                        
-│11:11 yinflying | s/appply/apply       <- Here is you have type                                                                             
+│11:11 yinflying | this is a appply_corrections
+│11:11 yinflying | s/appply/apply       <- Here is you have type
 │11:11 yinflying | this is a apply_corrections[repalce]  <- Here is corrected msg
 ```
-# OPTIONS 
+# OPTIONS
 
 ### check_every
 
@@ -57,3 +57,17 @@ increase the size of the dictionary holding previous messages.  Likewise,
 setting print_limit to 0 with a large number of saved messages will quickly
 fill your screen with a bunch of stuff should someone submit a generic
 enough correction string.
+
+### tag_msg :
+
+Customeized tag string message for print_format [tag]
+
+### vaild_name:
+
+control the valid nicks for applying correction
+
+    Default: "0"
+
+    Variables allowed:
+    "0"                 :allowed all nicks in all channel
+    "nick1,nick2,nick3" :allowed these nicks(usually contain yourself)

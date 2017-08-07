@@ -47,6 +47,16 @@
 #               [pattern]:     The "typo" portion of the correction.
 #               [replacement]: The "replacement" portion of the correction.
 #               [timestamp]:   The timestamp of the original message.
+#               [tag]:         The customized tag string message.
+#
+# tag_msg :     Customeized tag string message for print_format [tag]
+#
+# vaild_name:   control the valid nicks for applying correction
+#               Default: "0"
+#
+#               Variables allowed:
+#               "0"                 :allowed all nicks in all channel
+#               "nick1,nick2,nick3" :allowed these nicks(usually contain yourself)
 #
 # print_limit: Maximum number of lines to correct and print to the buffer. If
 #              set to 0 all lines that match the pattern will be printed.
@@ -60,6 +70,8 @@
 
 # History:
 #
+# 2017-08-07, yinflying <yinflying@foxmail.com>:
+#     version 1.2.2: add a option for controling valid_nick
 # 2017-08-06, yinflying <yinflying@foxmail.com>:
 #     version 1.2.1: Change the behavior of send correced message and add tag
 #                   setting
@@ -127,7 +139,8 @@ settings = {'check_every': '5',
             'message_limit': '2',
             'print_format': '[corrected][tag]',
             'print_limit': '1',
-            'tag_msg':'[replace]'}
+            'tag_msg':'[corrected]',
+            'valid_nick': '0'}
 
 # Initialize the dictionary to store most recent messages per buffer per nick.
 LASTWORDS = defaultdict(list)
@@ -183,7 +196,7 @@ def get_corrected_messages(nick, log, correction):
                                                'pattern': pattern,
                                                'replacement': replacement,
                                                'timestamp': timestamp,
-                                               'tag':get_option_string('tag_msg')})
+                                               'tag':weechat.config_get_plugin('tag_msg')})
     return sorted(corrected_messages, key=itemgetter('timestamp'))
 
 def get_option_int(option):
@@ -197,15 +210,6 @@ def get_option_int(option):
         weechat.config_set_plugin(option, settings[option])
         value = int(weechat.config_get_plugin(option))
     return value
-
-def get_option_string(option):
-    try:
-        value = weechat.config_get_plugin(option)
-    except ValueError:
-        weechat.config_set_plugin(option, settings[option])
-        value = weechat.config_get_plugin(option)
-    return value
-
 
 def get_valid_messages(log, expiry):
     """
@@ -253,9 +257,16 @@ def handle_message_cb(data, buffer, date, tags, disp, hl, nick, message):
     # Don't do anything if the message isn't suppose to be displayed.
     if disp:
         buffer_name = weechat.buffer_get_string(buffer, 'name')
-        server_name = buffer_name.split('.')[0]
-        buf_short_name = buffer_name.split('.')[1]
+        server_name,buf_short_name = buffer_name.split('.',2)
         log = LASTWORDS[(buffer_name, nick)]
+
+        all_vaild_nick = weechat.config_get_plugin('valid_nick')
+        if(all_vaild_nick != '0'):
+            all_vaild_nick = all_vaild_nick.split(',')
+            print all_vaild_nick
+            for n in all_vaild_nick:
+                if(nick != n):
+                    return weechat.WEECHAT_RC_OK
 
         # Matches on both 's/typo/replacement' and 'nick: s/typo/replacement',
         # mainly because of bitlbee since it puts your nick in front of
@@ -280,9 +291,9 @@ def handle_message_cb(data, buffer, date, tags, disp, hl, nick, message):
                     corrected_msg = print_format
                     for k, v in cm.iteritems():
                         corrected_msg = corrected_msg.replace('[%s]' % k, v)
-                    sended_msg = "%s;%s;priority_high,user_message;;%s"%(server_name,buf_short_name,corrected_msg)
+                    send_msg = "%s;%s;priority_high,user_message;;%s"%(server_name,buf_short_name,corrected_msg)
                     weechat.hook_signal_send("irc_input_send",
-                            weechat.WEECHAT_HOOK_SIGNAL_STRING,sended_msg)
+                            weechat.WEECHAT_HOOK_SIGNAL_STRING,send_msg)
         else:
             # If it's not a correction, store the message in LASTWORDS.
             log.insert(0, {'message': message, 'timestamp': date})
