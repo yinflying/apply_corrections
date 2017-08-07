@@ -263,7 +263,6 @@ def handle_message_cb(data, buffer, date, tags, disp, hl, nick, message):
         all_vaild_nick = weechat.config_get_plugin('valid_nick')
         if(all_vaild_nick != '0'):
             all_vaild_nick = all_vaild_nick.split(',')
-            print all_vaild_nick
             for n in all_vaild_nick:
                 if(nick != n):
                     return weechat.WEECHAT_RC_OK
