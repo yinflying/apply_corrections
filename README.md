@@ -12,7 +12,7 @@ when you have send a wrong message to the channer,you could type 's/typo/replace
 to correct your message
 ```
 │11:11 yinflying | this is a appply_corrections
-│11:11 yinflying | s/appply/apply       <- Here is you have type
+│11:11 yinflying | s/appply/apply       <- Here are you have typed
 │11:11 yinflying | this is a apply_corrections[repalce]  <- Here is corrected msg
 ```
 # OPTIONS
