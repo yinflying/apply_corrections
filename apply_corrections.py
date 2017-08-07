@@ -263,9 +263,8 @@ def handle_message_cb(data, buffer, date, tags, disp, hl, nick, message):
         all_vaild_nick = weechat.config_get_plugin('valid_nick')
         if(all_vaild_nick != '0'):
             all_vaild_nick = all_vaild_nick.split(',')
-            for n in all_vaild_nick:
-                if(nick != n):
-                    return weechat.WEECHAT_RC_OK
+            if(nick not in all_vaild_nick):
+                return weechat.WEECHAT_RC_OK
 
         # Matches on both 's/typo/replacement' and 'nick: s/typo/replacement',
         # mainly because of bitlbee since it puts your nick in front of
