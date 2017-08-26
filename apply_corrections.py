@@ -257,9 +257,13 @@ def handle_message_cb(data, buffer, date, tags, disp, hl, nick, message):
     # Don't do anything if the message isn't suppose to be displayed.
     if disp:
         buffer_name = weechat.buffer_get_string(buffer, 'name')
-        server_name,buf_short_name = buffer_name.split('.',2)
+        if(nick == ' *'):
+            nick = message.split(' ')[0];
         log = LASTWORDS[(buffer_name, nick)]
-
+        try:
+            server_name,buf_short_name = buffer_name.split('.',2)
+        except:
+            return
         all_vaild_nick = weechat.config_get_plugin('valid_nick')
         if(all_vaild_nick != '0'):
             all_vaild_nick = all_vaild_nick.split(',')
